@@ -3,15 +3,15 @@ using TiendaVideojuegosApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar DbContext con PostgreSQL leyendo la cadena de user-secrets
+// Configurar DbContext con SQL Server leyendo la cadena de conexión
 builder.Services.AddDbContext<TiendaContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Configurar CORS
-var origen = builder.Configuration["Cors:Origin"] ?? "http://localhost:3000";
+var origen = builder.Configuration["Cors:Origin"] ?? "*";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("OrigenPermitido", policy =>
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Dejar Swagger/OpenAPI visible fuera del 'if' de desarrollo para cuando se despliegue
+// Swagger/OpenAPI visible en cualquier entorno (desarrollo y producción)
 app.MapOpenApi();
 app.UseSwaggerUI(options =>
 {
