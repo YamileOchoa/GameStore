@@ -1,0 +1,87 @@
+@host = http://localhost:5190
+
+### ==========================================
+### 1. CÓDIGOS DE ÉXITO (200, 201, 204)
+### ==========================================
+
+### 1.1 GET /api/games - Lista con Filtros (HTTP 200 OK)
+GET {{host}}/api/games?genre=RPG&maxPrice=50
+
+### 1.2 GET /api/developers/1/games - Ruta Anidada por Desarrolladora (HTTP 200 OK)
+GET {{host}}/api/developers/1/games
+
+### 1.3 GET /api/genres/1/games - Ruta Anidada por Género (HTTP 200 OK)
+GET {{host}}/api/genres/1/games
+
+### 1.4 POST /api/developers - Crear Desarrolladora (HTTP 201 Created)
+POST {{host}}/api/developers
+Content-Type: application/json
+
+{
+  "name": "Capcom Studios",
+  "country": "Japón",
+  "foundedYear": 1979
+}
+
+### 1.5 PUT /api/developers/1 - Actualizar Desarrolladora (HTTP 204 No Content)
+PUT {{host}}/api/developers/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "CD Projekt Red Studios",
+  "country": "Polonia",
+  "foundedYear": 1994
+}
+
+### 1.6 DELETE /api/games/1 - Eliminar Juego (HTTP 204 No Content)
+DELETE {{host}}/api/games/1
+
+
+### ==========================================
+### 2. ERRORES Y REGLAS DE NEGOCIO (400, 404, 409)
+### ==========================================
+
+### 2.1 POST /api/games - Precio Inválido / Fuera de Rango (HTTP 400 Bad Request)
+POST {{host}}/api/games
+Content-Type: application/json
+
+{
+  "title": "Juego Test",
+  "price": 600,
+  "releaseDate": "2024-01-01",
+  "ageRating": "E",
+  "keyStock": 10,
+  "developerId": 1,
+  "genreId": 1
+}
+
+### 2.2 POST /api/games - Desarrolladora Inexistente / FK (HTTP 400 Bad Request)
+POST {{host}}/api/games
+Content-Type: application/json
+
+{
+  "title": "Juego Test 2",
+  "price": 29.99,
+  "releaseDate": "2024-01-01",
+  "ageRating": "E",
+  "keyStock": 10,
+  "developerId": 999,
+  "genreId": 1
+}
+
+### 2.3 GET /api/games/9999 - Recurso No Encontrado (HTTP 404 Not Found)
+GET {{host}}/api/games/9999
+
+### 2.4 POST /api/developers - Nombre Duplicado / Regla 1 (HTTP 409 Conflict)
+POST {{host}}/api/developers
+Content-Type: application/json
+
+{
+  "name": "Nintendo",
+  "country": "Japón",
+  "foundedYear": 1989
+}
+
+### 2.5 DELETE /api/developers/1 - Eliminar Desarrolladora con Juegos / Regla 2 (HTTP 409 Conflict)
+DELETE {{host}}/api/developers/1
